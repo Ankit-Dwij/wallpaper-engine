@@ -6,12 +6,14 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { theme } from "../../constants/theme";
 import { hp, wp } from "../../helpers/common";
 import Categories from "../../components/categories";
+import { apiCalls } from "../../api";
+import ImageGrid from "../../components/ImageGrid";
 
 const HomeScreen = () => {
   const { top } = useSafeAreaInsets();
@@ -19,11 +21,29 @@ const HomeScreen = () => {
 
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState(null);
+  const [images, setImages] = useState([]);
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
+  const fetchImages = async (
+    category = "animals",
+    limit = 10,
+    page = 1,
+    append = false
+  ) => {
+    const data = await apiCalls.getWallpaperByCategory(category, limit, page);
+    const { results } = data;
+    if (results) {
+      if (append) setImages([...images, ...results]);
+      else setImages([...results]);
+    }
+  };
 
   const handleChangeCategory = (cat) => setActiveCategory(cat);
 
-  // console.log("active cat :: ", activeCategory);
   return (
     <View style={[styles.container, { paddingTop }]}>
       {/* header */}
@@ -74,6 +94,9 @@ const HomeScreen = () => {
             handleChangeCategory={handleChangeCategory}
           />
         </View>
+
+        {/* images masonary grid */}
+        <View>{images.length > 0 && <ImageGrid images={images} />}</View>
       </ScrollView>
     </View>
   );

@@ -3,9 +3,9 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
@@ -15,6 +15,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
+    "axios": "^1.7.2",
     "expo": "^51.0.20",
     "expo-font": "~11.10.3",
     "expo-linear-gradient": "^13.0.2",
@@ -26,11 +27,14 @@
     "expo-web-browser": "~12.8.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.73.6",
+    "react-native": "0.74.3",
     "react-native-reanimated": "^3.10.0",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "@shopify/flash-list": "1.6.4",
+    "expo-dev-client": "~4.0.20",
+    "expo-image": "~1.12.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
