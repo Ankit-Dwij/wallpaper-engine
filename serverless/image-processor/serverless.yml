@@ -1,0 +1,32 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: ankitdwij
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: wallpaper-engine
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: image-processor
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  profile: personal
+  region: ap-south-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+        - "rekognition:DetectLabels"
+      Resource: "*"
+
+functions:
+  hello:
+    handler: handler.processImage
+    events:
+      - s3:
+          bucket: wallpaper-engine
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .jpeg
+          existing: true
+
+plugins:
+  - serverless-plugin-existing-s3

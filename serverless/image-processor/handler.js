@@ -23,7 +23,7 @@ const simplifiedColorMap = {
 
 const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL;
 const PREVIEW_BUCKET = process.env.PREVIEW_BUCKET;
-const MAX_WIDTH = 300; // Max width for preview image
+const MAX_WIDTH = 400; // Max width for preview image
 
 module.exports.processImage = async (event) => {
   const bucket = event.Records[0].s3.bucket.name;
@@ -48,7 +48,7 @@ module.exports.processImage = async (event) => {
     await createPreviewImage(tempInputPath, tempOutputPath);
 
     // Upload preview to S3
-    const previewKey = `${key}_preview`;
+    const previewKey = `preview_${key}`;
     await uploadToS3(PREVIEW_BUCKET, previewKey, tempOutputPath);
 
     // Process with Rekognition
