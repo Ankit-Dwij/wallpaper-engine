@@ -23,7 +23,7 @@ const simplifiedColorMap = {
 
 const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL;
 const PREVIEW_BUCKET = process.env.PREVIEW_BUCKET;
-const MAX_WIDTH = 400; // Max width for preview image
+const MAX_WIDTH = 600; // Max width for preview image
 
 module.exports.processImage = async (event) => {
   const bucket = event.Records[0].s3.bucket.name;
@@ -48,7 +48,7 @@ module.exports.processImage = async (event) => {
     await createPreviewImage(tempInputPath, tempOutputPath);
 
     // Upload preview to S3
-    const previewKey = `preview_${key}`;
+    const previewKey = `${key}`;
     await uploadToS3(PREVIEW_BUCKET, previewKey, tempOutputPath);
 
     // Process with Rekognition
@@ -68,9 +68,11 @@ module.exports.processImage = async (event) => {
     const labels = rekognitionData.Labels.map((label) => label.Name);
     const imageProperties = rekognitionData.ImageProperties;
 
+    console.log("IMAGE PRPS :: - ", JSON.stringify(imageProperties));
+
     const colorPercentages = (imageProperties?.DominantColors || []).reduce(
       (acc, color) => {
-        const simplifiedColor = color.DominantColorName.toLowerCase();
+        const simplifiedColor = color.SimplifiedColor.toLowerCase();
         if (!acc[simplifiedColor]) {
           acc[simplifiedColor] = 0;
         }
@@ -116,7 +118,7 @@ module.exports.processImage = async (event) => {
 
 async function createPreviewImage(inputPath, outputPath) {
   return new Promise((resolve, reject) => {
-    const ffmpeg = spawn("ffmpeg", [
+    const ffmpeg = spawn("/opt/bin/ffmpeg", [
       "-i",
       inputPath,
       "-vf",
