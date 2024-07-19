@@ -46,6 +46,7 @@ const config = {
     secretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
     region: envVars.AWS_REGION,
     sqs: { imageProcessorQueueUrl: envVars.SQS_IMAGE_PROCESSOR_QUEUE },
+    s3: { wallpaper_bucket: envVars.WALLPAPER_BUCKET, wallpaper_preview_bucket: envVars.WALLPAPER_PREVIEW_BUCKET },
   },
   jwt: {
     secret: envVars.JWT_SECRET,

@@ -7,21 +7,24 @@ import {
 } from '@aws-sdk/client-sqs';
 import { sqsClient } from '../../../config/aws';
 import config from '../../../config/config';
+import { wallpaperService } from '../../wallpaper';
 
 const queueUrl = config.aws.sqs.imageProcessorQueueUrl;
 
 const handleMessage = async (message: Message): Promise<void> => {
   try {
-    console.log('Processing message:', message.Body);
-    // Process the message
-    // ...
+    if (message.Body) {
+      console.log('Processing message:', message.Body);
+      // Process the message
+      await wallpaperService.createWallpaper({ ...JSON.parse(message.Body), type: 'wallpaper' });
 
-    // Delete the message after processing
-    const deleteParams: DeleteMessageCommandInput = {
-      QueueUrl: queueUrl,
-      ReceiptHandle: message.ReceiptHandle as string,
-    };
-    await sqsClient.send(new DeleteMessageCommand(deleteParams));
+      // Delete the message after processing
+      const deleteParams: DeleteMessageCommandInput = {
+        QueueUrl: queueUrl,
+        ReceiptHandle: message.ReceiptHandle as string,
+      };
+      await sqsClient.send(new DeleteMessageCommand(deleteParams));
+    }
   } catch (error) {
     console.error('Error processing message:', error);
   }
