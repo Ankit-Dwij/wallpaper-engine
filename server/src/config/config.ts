@@ -41,6 +41,12 @@ const config = {
       useUnifiedTopology: true,
     },
   },
+  aws: {
+    accessKey: envVars.AWS_ACCESS_KEY,
+    secretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
+    region: envVars.AWS_REGION,
+    sqs: { imageProcessorQueueUrl: envVars.SQS_IMAGE_PROCESSOR_QUEUE },
+  },
   jwt: {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
